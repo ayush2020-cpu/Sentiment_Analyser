@@ -1,22 +1,27 @@
 import nltk
+import string
+from nltk.corpus import stopwords, movie_reviews
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import metrics
 
 nltk.download('movie_reviews')
 nltk.download('stopwords')
 
-from nltk.corpus import movie_reviews
-
 documents = [(list(movie_reviews.words(fileid)), category)
              for category in movie_reviews.categories()
              for fileid in movie_reviews.fileids(category)]
 
-texts = [' '.join(doc) for doc, category in documents]
-labels = [category for doc, category in documents]
+def preprocess_text(text):
+    stop_words = set(stopwords.words('english'))
+    text = ''.join([char.lower() for char in text if char not in string.punctuation])
+    return ' '.join([word for word in text.split() if word not in stop_words])
 
-vectorizer = CountVectorizer(stop_words=nltk.corpus.stopwords.words('english'))
+texts = [preprocess_text(' '.join(doc)) for doc, _ in documents]
+labels = [category for _, category in documents]
+
+vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(texts)
 
 X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.3, random_state=42)
@@ -24,16 +29,17 @@ X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.3, ra
 model = MultinomialNB()
 model.fit(X_train, y_train)
 
-y_pred = model.predict(X_test)
-accuracy = metrics.accuracy_score(y_test, y_pred)
+accuracy = metrics.accuracy_score(y_test, model.predict(X_test))
 print(f"Accuracy: {accuracy * 100:.2f}%")
 
 def predict_sentiment(text):
+    text = preprocess_text(text)
     text_vectorized = vectorizer.transform([text])
-    return model.predict(text_vectorized)[0]
+    prob = model.predict_proba(text_vectorized).max()
+    return model.predict(text_vectorized)[0] if prob > 0.5 else "Can't predict the emotion"
 
-sample_text = "I love this movie! It's fantastic."
-print(f"Sentiment of '{sample_text}': {predict_sentiment(sample_text)}")
-
-sample_text2 = "The movie was terrible and boring."
-print(f"Sentiment of '{sample_text2}': {predict_sentiment(sample_text2)}")
+while True:
+    user_input = input("Enter a sentence (type 'stop' to exit): ")
+    if user_input.lower() == 'stop':
+        break
+    print(f"Sentiment: {predict_sentiment(user_input)}")
