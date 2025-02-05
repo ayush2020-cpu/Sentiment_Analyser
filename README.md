@@ -1,47 +1,41 @@
-# Sentiment_Analyser
-This is a simple sentiment analysis project that uses the Naive Bayes algorithm to classify movie reviews as either positive or negative. The model is trained on the movie_reviews dataset from NLTK and uses the CountVectorizer from sklearn to transform the text into feature vectors for classification.
-Requirements
+Sentiment Analysis Using Naive Bayes
+Overview
 
-    Python 3.x
-    nltk library
-    scikit-learn library
+This project performs sentiment analysis on movie reviews. It uses the Naive Bayes algorithm to predict whether a given sentence or movie review is positive or negative.
+What does it do?
 
-Installation
+    Preprocesses movie reviews (removes stopwords, punctuation, and makes everything lowercase).
+    Trains a machine learning model using a dataset of movie reviews.
+    Predicts whether a given text has a positive or negative sentiment.
 
-    Clone or download this repository.
+How to Use
+1. Install Required Libraries
 
-    Install the required dependencies:
+Before running the script, make sure you have the necessary Python libraries installed.
 
-    pip install nltk scikit-learn
+Run this command in your terminal or command prompt to install them:
 
-    Download NLTK datasets by running the script, which will automatically download the movie_reviews and stopwords datasets the first time you run the code.
+pip install nltk scikit-learn
 
-Usage
+2. Run the Script
 
-    The script loads movie reviews from NLTK's movie_reviews corpus.
-    It preprocesses the data, converting it into feature vectors.
-    A Naive Bayes classifier (MultinomialNB) is trained on the data.
-    The model's accuracy is evaluated using the test set and printed.
-    You can test the model by passing any text to the predict_sentiment() function, which will return whether the sentiment is positive or negative.
+Save the script as sentiment_analysis.py, and then run it using the following command:
 
-Example
+python sentiment_analysis.py
 
-sample_text = "I love this movie! It's fantastic."
-print(f"Sentiment of '{sample_text}': {predict_sentiment(sample_text)}")
+3. Input Sentences
 
-sample_text2 = "The movie was terrible and boring."
-print(f"Sentiment of '{sample_text2}': {predict_sentiment(sample_text2)}")
+After running the script, you can start typing sentences, and it will tell you whether the sentiment is positive or negative. If the sentiment is unclear, it will say "Can't predict the emotion".
 
-Output
+To stop the program, type stop and press Enter.
+Example:
 
-The program will output the accuracy of the model on the test data, followed by the sentiment of any test text you input.
+Enter a sentence (type 'stop' to exit): I love this movie! It's amazing.
+Sentiment: positive
 
-Example output:
+Enter a sentence (type 'stop' to exit): The movie was really bad.
+Sentiment: negative
 
-Accuracy: 81.40%
-Sentiment of 'I love this movie! It's fantastic.': pos
-Sentiment of 'The movie was terrible and boring.': neg
+4. Accuracy
 
-License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+The model’s accuracy will also be printed at the start, telling you how well it performs on the given movie review dataset.
